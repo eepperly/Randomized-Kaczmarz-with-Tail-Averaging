@@ -3,9 +3,11 @@
 import numpy as np
 from tqdm import tqdm
 
-def tark(A, b, num_steps = None, burn_in = None, output_history = True, num_threads=1, under_relax = lambda T: 1.0, mu_reg = None, lamb_reg = None, dual = False):
-    if len(b.shape) > 1 and b.shape[1] > 1:
-        raise ValueError("RK methods only implemented for vectors b")
+def tark(A, b = None, b_fun = None, num_steps = None, burn_in = None, output_history = True, num_threads=1, under_relax = lambda T: 1.0, mu_reg = None, lamb_reg = None, dual = False, x0 = None):
+    if not (b is None):
+        if not (b_fun is None):
+            raise ValueError("Cannot input both b and b_fun arguments")
+        b_fun = lambda idx: b[idx]
     
     if num_steps is None:
         num_steps = A.shape[0]
@@ -31,8 +33,11 @@ def tark(A, b, num_steps = None, burn_in = None, output_history = True, num_thre
         if num_threads > 1:
             raise ValueError("Dual RK not implemented with multiple threads")
 
-    x = np.zeros([A.shape[1]] + list(b.shape[1:]))
-    output = np.zeros([A.shape[1]] + list(b.shape[1:]))
+    if x0 is None:
+        x = np.zeros(A.shape[1])
+    else:
+        x = x0
+    output = np.zeros(A.shape[1])
 
     weights = np.sum(A**2, axis=1)
     weights /= sum(weights)
@@ -42,15 +47,15 @@ def tark(A, b, num_steps = None, burn_in = None, output_history = True, num_thre
     for t in tqdm(range(num_steps)):
         if num_threads > 1:
             i = idxs[t*num_threads:(t+1)*num_threads]
-            x += under_relax(t) * np.mean(((b[i] - A[i,:] @ x)[:,np.newaxis] *  A[i,:]) / np.sum(A[i,:]**2,axis=1)[:,np.newaxis], axis=0)
+            x += under_relax(t) * np.mean(((b_fun(i) - A[i,:] @ x)[:,np.newaxis] *  A[i,:]) / np.sum(A[i,:]**2,axis=1)[:,np.newaxis], axis=0)
         elif dual:
             i = idxs[t]
-            update = under_relax(t) * (b[i] - A[i,:] @ x - lamb * dual_vector[i]) / (np.linalg.norm(A[i,:])**2 + lamb)
+            update = under_relax(t) * (b_fun(i) - A[i,:] @ x - lamb * dual_vector[i]) / (np.linalg.norm(A[i,:])**2 + lamb)
             dual_vector[i] += update
             x += update * A[i,:]
         else:
             i = idxs[t]
-            x += under_relax(t) * (A[i,:] * (b[i] - A[i,:] @ x)) / np.linalg.norm(A[i,:])**2
+            x += under_relax(t) * (A[i,:] * (b_fun(i) - A[i,:] @ x)) / np.linalg.norm(A[i,:])**2
         if mu != 1.0 and not dual:
             x *= mu
         if t >= burn_in:
@@ -66,21 +71,21 @@ def tark(A, b, num_steps = None, burn_in = None, output_history = True, num_thre
     else:
         return output
 
-def rk(A, b, **kwargs):
+def rk(A, **kwargs):
     if not ("num_steps" in kwargs):
         kwargs["num_steps"] = A.shape[0]
     kwargs["burn_in"] = kwargs["num_steps"] - 1
-    return tark(A, b, **kwargs)
+    return tark(A, **kwargs)
 
-def rka(A, b, **kwargs):
+def rka(A, **kwargs):
     if not ("num_threads" in kwargs):
         kwargs["num_threads"] = 10
-    return rk(A, b, **kwargs)
+    return rk(A, **kwargs)
 
-def rku(A, b, **kwargs):
+def rku(A, **kwargs):
     if not ("under_relax" in kwargs):
         kwargs["under_relax"] = lambda t: 1/np.sqrt(1+t)
-    return rk(A, b, **kwargs)
+    return rk(A, **kwargs)
 
 def mylstsq(A,b,lamb=None):
     if lamb is None:
