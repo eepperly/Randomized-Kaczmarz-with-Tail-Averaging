@@ -20,10 +20,10 @@ x = mylstsq(A, b)
 _, S, _ = np.linalg.svd(A, full_matrices=False)
 print(max(S) / min(S))
 
-tark_history = tark(A,b,num_steps=num_steps,burn_in=burn_in,output_history=True)
-rk_history = rk(A,b,num_steps=num_steps,output_history=True)
-rka_history = rk(A,b,num_steps=num_steps//num_threads,output_history=True,num_threads=num_threads)
-rku_history = rk(A,b,num_steps=num_steps,output_history=True,under_relax=lambda t:1/(t+1)**(1/2))
+tark_history = tark(A,b=b,num_steps=num_steps,burn_in=burn_in,output_history=True)
+rk_history = rk(A,b=b,num_steps=num_steps,output_history=True)
+rka_history = rk(A,b=b,num_steps=num_steps//num_threads,output_history=True,num_threads=num_threads)
+rku_history = rk(A,b=b,num_steps=num_steps,output_history=True,under_relax=lambda t:1/(t+1)**(1/2))
 
 import matplotlib.pyplot as plt
 plt.rcParams.update({

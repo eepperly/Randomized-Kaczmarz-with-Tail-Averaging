@@ -24,12 +24,12 @@ x_mu = mylstsq(A, b, lamb=lamb)
 num_steps = n
 burn_in = 1000
 
-tark_history = tark(A, b, num_steps=num_steps, burn_in=burn_in)
-rk_history = rk(A, b, num_steps=num_steps)
+tark_history = tark(A, b=b, num_steps=num_steps, burn_in=burn_in, output_history=True)
+rk_history = rk(A, b=b, num_steps=num_steps, output_history=True)
 
-rk_aug_history = rk(A_aug, b_aug, num_steps=num_steps)
-tark_aug_history = tark(A_aug, b_aug, num_steps=num_steps, burn_in=burn_in)
-tark_rr_history = tark(A, b, num_steps=num_steps, mu_reg=mu, burn_in=burn_in)
+rk_aug_history = rk(A_aug, b=b_aug, num_steps=num_steps, output_history=True)
+tark_aug_history = tark(A_aug, b=b_aug, num_steps=num_steps, burn_in=burn_in, output_history=True)
+tark_rr_history = tark(A, b=b, num_steps=num_steps, mu_reg=mu, burn_in=burn_in, output_history=True)
 
 import matplotlib.pyplot as plt
 plt.rcParams.update({

@@ -3,7 +3,7 @@
 import numpy as np
 from tqdm import tqdm
 
-def tark(A, b = None, b_fun = None, num_steps = None, burn_in = None, output_history = True, num_threads=1, under_relax = lambda T: 1.0, mu_reg = None, lamb_reg = None, dual = False, x0 = None):
+def tark(A, b = None, b_fun = None, num_steps = None, burn_in = None, output_history = False, num_threads=1, under_relax = lambda T: 1.0, mu_reg = None, lamb_reg = None, dual = False, x0 = None):
     if not (b is None):
         if not (b_fun is None):
             raise ValueError("Cannot input both b and b_fun arguments")

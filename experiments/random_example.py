@@ -9,8 +9,8 @@ A = np.random.randn(1000000, 10)
 y = np.random.randn(10)
 b = A @ y + 0.1*np.random.rand(1000000)
 x = mylstsq(A, b)
-tark_history = tark(A,b,num_steps=A.shape[0],burn_in=1000,output_history=True)
-rk_history = rk(A,b,num_steps=A.shape[0],output_history=True)
+tark_history = tark(A,b=b,num_steps=A.shape[0],burn_in=1000,output_history=True)
+rk_history = rk(A,b=b,num_steps=A.shape[0],output_history=True)
 
 import matplotlib.pyplot as plt
 plt.rcParams.update({

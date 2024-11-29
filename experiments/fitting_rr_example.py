@@ -28,13 +28,13 @@ b_aug = np.concatenate([b, np.zeros(d)])
 x = mylstsq(A, b)
 x_mu = mylstsq(A, b, lamb=lamb)
 
-tark_history = tark(A, b, num_steps=num_steps, burn_in=burn_in)
-rk_history = rk(A, b, num_steps=num_steps)
+tark_history = tark(A, b=b, num_steps=num_steps, burn_in=burn_in, output_history=True)
+rk_history = rk(A, b=b, num_steps=num_steps, output_history=True)
 
-drk_history = rk(A, b, num_steps=num_steps, mu_reg=mu, dual=True)
-tark_aug_history = tark(A_aug, b_aug, num_steps=num_steps, burn_in=burn_in)
-rk_rr_history = rk(A, b, num_steps=num_steps, mu_reg=mu)
-tark_rr_history = tark(A, b, num_steps=num_steps, mu_reg=mu, burn_in=burn_in)
+drk_history = rk(A, b=b, num_steps=num_steps, mu_reg=mu, dual=True, output_history=True)
+tark_aug_history = tark(A_aug, b=b_aug, num_steps=num_steps, burn_in=burn_in, output_history=True)
+rk_rr_history = rk(A, b=b, num_steps=num_steps, mu_reg=mu, output_history=True)
+tark_rr_history = tark(A, b=b, num_steps=num_steps, mu_reg=mu, burn_in=burn_in, output_history=True)
 
 import matplotlib.pyplot as plt
 plt.rcParams.update({
