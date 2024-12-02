@@ -1,6 +1,6 @@
 # Randomized Kaczmarz with Tail Averaging
 
-This repository presents code for the paper _Randomized Kaczmarz with tail averaging_ by [Ethan N. Epperly](https://www.ethanepperly.com), [Gil Goldshlager](https://ggoldshlager.com), and [Robert J. Webber](https://sites.google.com/ucsd.edu/rwebber/).
+This repository presents code for the paper [_Randomized Kaczmarz with tail averaging_](https://arxiv.org/abs/2411.19877) by [Ethan N. Epperly](https://www.ethanepperly.com), [Gil Goldshlager](https://ggoldshlager.com), and [Robert J. Webber](https://sites.google.com/ucsd.edu/rwebber/).
 The [randomized Kaczmarz](https://www.math.ucdavis.edu/~strohmer/papers/2007/kaczmarz.pdf) (RK) method is a widely-studied method for solving a system of equations $\boldsymbol{Ax} = \boldsymbol{b}$, and it proceeds by repeatedly applying the following two steps:
 
 1. _Sample_ an index $i$ with probabilities proportional to the row norms $\mathbb{P} \{ i = j \} = \\|\boldsymbol{A}(j,:)\\|^2 / \\|\boldsymbol{A}\\|_{\rm F}^2$.
